@@ -1,41 +1,54 @@
 export default class Snake {
   constructor(scene) {
     this.body = []
+    this.size = 20
     this.scene = scene
+    this.lastMoveTime = 0
+    this.moveInterval = 500
     this.direction = Phaser.Math.Vector2.RIGHT
-    
-    this.body.push(
-      this.scene.add.rectangle(0, 0, 20, 20, 0xff0000).setOrigin(0)
-    )
 
     this.body.push(
-      this.scene.add.rectangle(0, 0, 20, 20, 0x00ff00).setOrigin(0)
+      this.scene.add
+        .rectangle(0, 0, this.size, this.size, 0xff0000)
+        .setOrigin(0)
     )
+
+    this.bait = this.scene.add
+      .rectangle(0, 0, this.size, this.size, 0x00ff00)
+      .setOrigin(0)
+
 
     scene.input.keyboard.on('keydown', event => {
       this.keydown(event)
     })
   }
 
-  keydown(event){
-    switch(event.keyCode){
-      case 37: // left
-        this.direction = Phaser.Math.Vector2.LEFT
+  keydown(event) {
+    switch (event.keyCode) {
+      case 37: this.direction = Phaser.Math.Vector2.LEFT
         break
-      case 38: // up
-        this.direction = Phaser.Math.Vector2.UP
+      case 38: this.direction = Phaser.Math.Vector2.UP
         break
-      case 39: // right
-        this.direction = Phaser.Math.Vector2.RIGHT
+      case 39: this.direction = Phaser.Math.Vector2.RIGHT
         break
-      case 40: // down
-        this.direction = Phaser.Math.Vector2.DOWN
+      case 40: this.direction = Phaser.Math.Vector2.DOWN
         break
     }
   }
 
   update(time) {
-    this.body[0].x += this.direction.x
-    this.body[0].y += this.direction.y
+    if (time >= this.lastMoveTime + this.moveInterval) {
+      this.lastMoveTime = time
+      this.move()
+    }
+  }
+
+  move() {
+    for (let i = this.body.length - 1; i > 0; i--) {
+      this.body[i].x = this.body[i - 1].x
+      this.body[i].y = this.body[i - 1].y
+    }
+    this.body[0].x += this.direction.x * this.size
+    this.body[0].y += this.direction.y * this.size
   }
 }
