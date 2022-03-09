@@ -9,7 +9,19 @@ export default class Snake {
 
     this.body.push(
       this.scene.add
-        .rectangle(0, 0, this.size, this.size, 0xff0000)
+        .rectangle(0, 0, this.size, this.size, 0xffffff)
+        .setOrigin(0),
+      this.scene.add
+        .rectangle(0, 0, this.size, this.size, 0xffffff)
+        .setOrigin(0),
+      this.scene.add
+        .rectangle(0, 0, this.size, this.size, 0xffffff)
+        .setOrigin(0),
+      this.scene.add
+        .rectangle(0, 0, this.size, this.size, 0xffffff)
+        .setOrigin(0),
+      this.scene.add
+        .rectangle(0, 0, this.size, this.size, 0xffffff)
         .setOrigin(0)
     )
 
@@ -70,16 +82,22 @@ export default class Snake {
   takeTheBait() {
     this.body.push(
       this.scene.add
-        .rectangle(0, 0, this.size, this.size, 0x00ff00)
+        .rectangle(0, 0, this.size, this.size, 0xffffff)
         .setOrigin(0)
     )
     this.newBaitPosition()
   }
 
+  gameOver() {
+    this.scene.scene.restart()
+  }
+
   move() {
     let bait = this.bait
-    let x = this.body[0].x + this.direction.x * this.size
-    let y = this.body[0].y + this.direction.y * this.size
+    let head = this.body[0]
+    const { width, height } = this.scene.game.config
+    let x = head.x + this.direction.x * this.size
+    let y = head.y + this.direction.y * this.size
 
     if (bait.x === x && bait.y === y) {
       this.takeTheBait()
@@ -90,7 +108,25 @@ export default class Snake {
       this.body[i].y = this.body[i - 1].y
     }
 
-    this.body[0].x = x
-    this.body[0].y = y
+    head.x = x
+    head.y = y
+
+    if (
+      head.x < 0
+      || head.y < 0
+      || head.x >= width
+      || head.y >= height
+    ) {
+      this.gameOver()
+    }
+
+    if (
+      this.body.slice(1).some(
+        tail => tail.x === head.x && tail.y === head.y
+      )
+    ) {
+      this.gameOver()
+    }
+
   }
 }
