@@ -17,10 +17,25 @@ export default class Snake {
       .rectangle(0, 0, this.size, this.size, 0x00ff00)
       .setOrigin(0)
 
+    this.newBaitPosition()
 
     scene.input.keyboard.on('keydown', event => {
       this.keydown(event)
     })
+  }
+
+  newBaitPosition() {
+    const size = this.size
+    const { random, floor } = Math
+    const { width, height } = this.scene.game.config
+
+    this.bait.x = floor(
+      (random() * width) / size
+    ) * size
+
+    this.bait.y = floor(
+      (random() * height) / size
+    ) * size
   }
 
   keydown(event) {
