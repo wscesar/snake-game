@@ -39,14 +39,23 @@ export default class Snake {
   }
 
   keydown(event) {
+    const { LEFT, RIGHT, UP, DOWN } = Phaser.Math.Vector2
     switch (event.keyCode) {
-      case 37: this.direction = Phaser.Math.Vector2.LEFT
+      case 37:
+        if (this.direction !== RIGHT)
+          this.direction = LEFT
         break
-      case 38: this.direction = Phaser.Math.Vector2.UP
+      case 38:
+        if (this.direction !== DOWN)
+          this.direction = UP
         break
-      case 39: this.direction = Phaser.Math.Vector2.RIGHT
+      case 39:
+        if (this.direction !== LEFT)
+          this.direction = RIGHT
         break
-      case 40: this.direction = Phaser.Math.Vector2.DOWN
+      case 40:
+        if (this.direction !== UP)
+          this.direction = DOWN
         break
     }
   }
