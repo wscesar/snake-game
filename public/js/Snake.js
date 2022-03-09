@@ -4,7 +4,7 @@ export default class Snake {
     this.size = 20
     this.scene = scene
     this.lastMoveTime = 0
-    this.moveInterval = 500
+    this.moveInterval = 100
     this.direction = Phaser.Math.Vector2.RIGHT
 
     this.body.push(
@@ -58,12 +58,30 @@ export default class Snake {
     }
   }
 
+  takeTheBait() {
+    this.body.push(
+      this.scene.add
+        .rectangle(0, 0, this.size, this.size, 0x00ff00)
+        .setOrigin(0)
+    )
+    this.newBaitPosition()
+  }
+
   move() {
+    let bait = this.bait
+    let x = this.body[0].x + this.direction.x * this.size
+    let y = this.body[0].y + this.direction.y * this.size
+
+    if (bait.x === x && bait.y === y) {
+      this.takeTheBait()
+    }
+
     for (let i = this.body.length - 1; i > 0; i--) {
       this.body[i].x = this.body[i - 1].x
       this.body[i].y = this.body[i - 1].y
     }
-    this.body[0].x += this.direction.x * this.size
-    this.body[0].y += this.direction.y * this.size
+
+    this.body[0].x = x
+    this.body[0].y = y
   }
 }
